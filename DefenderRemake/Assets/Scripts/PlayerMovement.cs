@@ -10,18 +10,17 @@ public class PlayerMovement : MonoBehaviour {
     private float _playerShipSpeedVertical = 15;
     [SerializeField]
     private GameObject _background;
+    
+    public bool _goingToLeft = true;
 
-    private bool _goingToRight = false;
-    private bool _goingToLeft = true;
-
-    private void FixedUpdate()
+    private void Update()
     {
         if(_goingToLeft)
         {
             _background.transform.position += Vector3.right * _playerShipSpeedHorizontal * Time.deltaTime;
         }
 
-        if (_goingToRight)
+        if (!_goingToLeft)
         {
             _background.transform.position += Vector3.left * _playerShipSpeedHorizontal * Time.deltaTime;
         }
@@ -30,12 +29,10 @@ public class PlayerMovement : MonoBehaviour {
         {
             transform.localScale = Vector3.one;
             _goingToLeft = true;
-            _goingToRight = false;
         }
         if(Input.GetKey(KeyCode.RightArrow))
         {
             transform.localScale = new Vector3(-1, 1, 1);
-            _goingToRight = true;
             _goingToLeft = false;
         }
         if (Input.GetKey(KeyCode.UpArrow))

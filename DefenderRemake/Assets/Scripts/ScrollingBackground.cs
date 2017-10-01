@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ScrollingBackground : MonoBehaviour {
-
+public class ScrollingBackground : MonoBehaviour
+{
     [SerializeField]
-    private GameObject _parentBackground;
+    private GameObject _player;
+    private PlayerMovement _playerMovement;
 
     private Transform[] _backgrounds;
     private int _childCount = 0;
@@ -14,21 +15,34 @@ public class ScrollingBackground : MonoBehaviour {
     private int _rightIndex;
     private int _backgroundOffset = 25;
 
+    private bool _goingToLeft = true;
+
     private void Start()
     {
+        if (_player != null)
+        {
+            _playerMovement = _player.GetComponent<PlayerMovement>();
+        }
         InitializeList();
     }
 
     private void Update()
     {
-        if(Input.GetKeyUp(KeyCode.A))
-        {
-            ScrollLeft();
-        }
+        bool playerGoingToLeft = _playerMovement._goingToLeft;
 
-        if (Input.GetKeyUp(KeyCode.D))
+        if (playerGoingToLeft)
         {
-            ScrollRight();
+            if(BackgroundVisibleToCamera(_leftIndex))
+            {
+                ScrollLeft();
+            }
+        }
+        else
+        {
+            if(BackgroundVisibleToCamera(_rightIndex))
+            {
+                ScrollRight();
+            }
         }
     }
 
@@ -45,23 +59,29 @@ public class ScrollingBackground : MonoBehaviour {
         _rightIndex = _childCount - 1;
     }
 
+    private bool BackgroundVisibleToCamera(int index)
+    {
+        Vector3 screenPoint = Camera.main.WorldToViewportPoint(_backgrounds[index].position);
+        return screenPoint.z > 0 && screenPoint.x > 0 && screenPoint.x < 1 && screenPoint.y > 0 && screenPoint.y < 1;
+    }
+
     private void ScrollLeft()
     {
-        int previousRight = _rightIndex;
         float newPosition = _backgrounds[_leftIndex].position.x - _backgroundOffset;
         _backgrounds[_rightIndex].position = new Vector3(newPosition, 0, 0);
 
         _leftIndex = _rightIndex;
         _rightIndex--;
-        if(_rightIndex < 0)
+        if (_rightIndex < 0)
         {
             _rightIndex = _childCount - 1;
         }
+
+        _goingToLeft = true;
     }
 
     private void ScrollRight()
     {
-        int previousLeft = _leftIndex;
         float newPosition = _backgrounds[_rightIndex].position.x + _backgroundOffset;
         _backgrounds[_leftIndex].position = new Vector3(newPosition, 0, 0);
 
@@ -71,5 +91,7 @@ public class ScrollingBackground : MonoBehaviour {
         {
             _leftIndex = 0;
         }
+
+        _goingToLeft = false;
     }
 }
