@@ -15,8 +15,6 @@ public class ScrollingBackground : MonoBehaviour
     private int _rightIndex;
     private int _backgroundOffset = 25;
 
-    private bool _goingToLeft = true;
-
     private void Start()
     {
         if (_player != null)
@@ -76,8 +74,6 @@ public class ScrollingBackground : MonoBehaviour
         {
             _rightIndex = _childCount - 1;
         }
-
-        _goingToLeft = true;
     }
 
     private void ScrollRight()
@@ -91,7 +87,5 @@ public class ScrollingBackground : MonoBehaviour
         {
             _leftIndex = 0;
         }
-
-        _goingToLeft = false;
     }
 }
