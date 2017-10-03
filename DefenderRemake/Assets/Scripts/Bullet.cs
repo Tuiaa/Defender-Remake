@@ -18,4 +18,14 @@ public class Bullet : MonoBehaviour {
             Destroy(gameObject);
         }
 	}
+
+    void OntriggerEnter2D(Collider2D col)
+    {
+        Debug.Log("enemy triggered");
+        if (col.gameObject.tag == "Enemy")
+        {
+            Destroy(col.gameObject);
+            Destroy(gameObject);
+        }
+    }
 }
