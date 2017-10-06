@@ -23,14 +23,16 @@ public class ScrollingBackground : MonoBehaviour
     {
         bool playerGoingToLeft = _playerMovement._goingToLeft;
 
-        if (playerGoingToLeft)
+        MoveBackground((playerGoingToLeft) ? GameManager.DIRECTION.LEFT :  GameManager.DIRECTION.RIGHT);
+
+       /* if (playerGoingToLeft)
         {
             MoveBackground(GameManager.DIRECTION.LEFT);
         }
         else
         {
             MoveBackground(GameManager.DIRECTION.RIGHT);
-        }
+        }*/
     }
 
     public float GetBackgroundOffset()
@@ -46,7 +48,8 @@ public class ScrollingBackground : MonoBehaviour
                 gameObject.transform.position += Vector3.right * _playerSpeed * Time.deltaTime;
                 if (gameObject.transform.position.x > _backgroundOffset)
                 {
-                    gameObject.transform.position = new Vector3(-54.4f, 0, 0);
+                    //Vector3 Xpos = Camera.main.ViewportToScreenPoint(_player.transform.position);
+                    gameObject.transform.position = new Vector3(-46f, 0, 0);
                 }
                 break;
 

@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour {
-
+public class Bullet : MonoBehaviour
+{
+    private const string GAMEMANAGER = "GameManager";
+    private GameObject _gameManager;
     private Renderer _bulletRenderer;
 
     private void Awake()
     {
+        _gameManager = GameObject.FindGameObjectWithTag(GAMEMANAGER);
         _bulletRenderer = GetComponent<Renderer>();
     }
 
@@ -19,11 +22,13 @@ public class Bullet : MonoBehaviour {
         }
 	}
 
-    void OntriggerEnter2D(Collider2D col)
+    void OnTriggerEnter2D(Collider2D col)
     {
-        Debug.Log("enemy triggered");
+        Debug.Log("col triggered");
         if (col.gameObject.tag == "Enemy")
         {
+            _gameManager.GetComponent<GameManager>().SetPlayerScore(100);
+            Debug.Log("enemy tag found");
             Destroy(col.gameObject);
             Destroy(gameObject);
         }

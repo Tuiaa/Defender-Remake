@@ -39,7 +39,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetKey(KeyCode.UpArrow))
         {
-            if(transform.position.y < (Camera.main.ViewportToWorldPoint(Vector3.up).y - 0.5f))
+            if(transform.position.y < (Camera.main.ViewportToWorldPoint(Vector3.up).y - 2f))
             {
                 transform.position += Vector3.up * _playerShipSpeedVertical * Time.deltaTime;
             }
