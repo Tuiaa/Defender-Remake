@@ -13,8 +13,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     private float _playerShipSpeedHorizontal = 25;
     [SerializeField]
-    private float _playerShipSpeedVertical = 15;
-    [SerializeField]
     private GameObject _background;
     private bool _goingToLeft = true;
 
@@ -43,7 +41,7 @@ public class PlayerMovement : MonoBehaviour
         mousePos = Camera.main.ViewportToWorldPoint(mousePos);
 
         // Move player up/down if mouse position is inside camera view
-        if (mousePos.y > (Camera.main.ViewportToWorldPoint(Vector3.zero).y + 0.5f) && mousePos.y < (Camera.main.ViewportToWorldPoint(Vector3.up).y - 0.5f))
+        if (mousePos.y > (Camera.main.ViewportToWorldPoint(Vector3.zero).y + 0.5f) && mousePos.y < (Camera.main.ViewportToWorldPoint(Vector3.up).y - 2f))
         {
             transform.position = new Vector3(0, mousePos.y, -0.1f);
         }

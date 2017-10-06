@@ -6,7 +6,6 @@ using UnityEngine;
  *      ENEMY BULLET
  *      - Bullet is destroyed after it's not visible to camera
  *      - If bullet hits player, player dies
- * 
  */
 public class EnemyBullet : MonoBehaviour
 {
@@ -16,7 +15,7 @@ public class EnemyBullet : MonoBehaviour
     void Awake()
     {
         _bulletRenderer = gameObject.GetComponent<Renderer>();
-        _gameManager = GameObject.Find("GameManager");
+        _gameManager = GameObject.Find(GameStrings.GAME_MANAGER);
     }
 
 	void Update ()
@@ -29,7 +28,7 @@ public class EnemyBullet : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.gameObject.tag == "Player")
+        if (col.gameObject.tag == GameStrings.PLAYER)
         {
             if (_gameManager != null)
             {

@@ -7,49 +7,42 @@ using UnityEngine;
  *      - Enemies move towards player
  *      - When enemies get to the end of the background,
  *        they are moved to other end
- * 
+ *      - Enemies fire bullets at randomly chosen frequency
  */
 public class EnemyController : MonoBehaviour
 {
-    const string PLAYER = "Player";
-
     [SerializeField]
     private float _speed = 5f;
     [SerializeField]
-    private float _shootFrequency = 2f;
+    private float _bulletSpeed = 2f;
 
-    private float _timer;
     private GameObject _player;
-    private GameObject _bullet;
-
-    private float _bulletSpeed = 5f;
     private PlayerMovement _playerMovement;
 
     private Renderer _enemyRenderer;
 
+    private float _shootTimer;
+    private float _shootFrequency = 3f;
+
     private float magnitude = 0.05f;
     private float frequency = 5f;
-    private Vector3 pos;
-    private Vector3 axis;
 
     private Vector3 _previousDirection = Vector3.left;
 
     private void Start()
     {
-        _player = GameObject.FindGameObjectWithTag(PLAYER);
+        _player = GameObject.FindGameObjectWithTag(GameStrings.PLAYER);
         _playerMovement = _player.GetComponent<PlayerMovement>();
         _enemyRenderer = gameObject.GetComponent<Renderer>();
 
-        _shootFrequency = Random.Range(2f, 8f);
-        _timer = _shootFrequency;
+        _shootFrequency = Random.Range(3f, 8f);
+        _shootTimer = _shootFrequency;
     }
 
     private void Update()
     {
-        pos = transform.localPosition;
-        pos += _previousDirection * Time.deltaTime * _speed;
-        axis = transform.up;
-        transform.localPosition = pos + axis * Mathf.Sin(Time.time * frequency) * magnitude;
+        transform.localPosition += _previousDirection * Time.deltaTime * _speed;
+        transform.localPosition = transform.localPosition + Vector3.up * Mathf.Sin(Time.time * frequency) * magnitude;
 
         // Change direction towards player
         if (!_playerMovement.PlayerGoingToLeft())
@@ -70,12 +63,11 @@ public class EnemyController : MonoBehaviour
                 gameObject.transform.localPosition = new Vector3(-60f, transform.position.y, 0);
             }
         }
-        
-            _timer -= Time.deltaTime;
-            if (_timer <= 0)
-            {
-                Shoot();
-            }
+        _shootTimer -= Time.deltaTime;
+        if (_shootTimer <= 0)
+        {
+            Shoot();
+        }
     }
 
     private void Shoot()
@@ -85,11 +77,11 @@ public class EnemyController : MonoBehaviour
             Vector3 shootDirection = _player.transform.position - transform.position;
             shootDirection = shootDirection.normalized;
 
-            GameObject bullet = Instantiate(Resources.Load("EnemyBullet", typeof(GameObject))) as GameObject;
+            GameObject bullet = Instantiate(Resources.Load(GameStrings.ENEMY_BULLET, typeof(GameObject))) as GameObject;
             bullet.transform.position = transform.position;
             bullet.GetComponent<Rigidbody2D>().velocity = shootDirection * _bulletSpeed;
 
-            _timer = _shootFrequency;
+            _shootTimer = _shootFrequency;
         }
     }
 }
