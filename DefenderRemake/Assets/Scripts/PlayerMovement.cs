@@ -2,6 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ *      PLAYER MOVEMENT
+ *      - Moves player up/down depending on the y mouse position
+ *      - Changes the left/right direction where player is moving
+ *        depending on the x value of mouse position
+ */
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField]
@@ -10,12 +16,16 @@ public class PlayerMovement : MonoBehaviour
     private float _playerShipSpeedVertical = 15;
     [SerializeField]
     private GameObject _background;
-    
-    public bool _goingToLeft = true;
+    private bool _goingToLeft = true;
 
     private void Update()
     {
         CheckInputs();
+    }
+
+    public bool PlayerGoingToLeft()
+    {
+        return _goingToLeft;
     }
 
     public float GetPlayerHorizontalSpeed()
@@ -25,32 +35,31 @@ public class PlayerMovement : MonoBehaviour
 
     private void CheckInputs()
     {
-        if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            transform.localScale = Vector3.one;
-            _goingToLeft = true;
-        }
 
-        if (Input.GetKey(KeyCode.RightArrow))
+        float mouseRatioX = Input.mousePosition.x / Screen.width;
+        float mouseRatioY = Input.mousePosition.y / Screen.height;
+
+        Vector3 mousePos = new Vector3(mouseRatioX, mouseRatioY, 0f);
+        mousePos = Camera.main.ViewportToWorldPoint(mousePos);
+
+        // Move player up/down if mouse position is inside camera view
+        if (mousePos.y > (Camera.main.ViewportToWorldPoint(Vector3.zero).y + 0.5f) && mousePos.y < (Camera.main.ViewportToWorldPoint(Vector3.up).y - 0.5f))
+        {
+            transform.position = new Vector3(0, mousePos.y, -0.1f);
+        }
+        Vector3 xPosOfMouse = new Vector3(0.5f, 0, 0);
+
+        // Player should go to right
+        if (mousePos.x > Camera.main.ViewportToWorldPoint(xPosOfMouse).x)
         {
             transform.localScale = new Vector3(-1, 1, 1);
             _goingToLeft = false;
         }
-
-        if (Input.GetKey(KeyCode.UpArrow))
+        // Player should go to left
+        if (mousePos.x < Camera.main.ViewportToWorldPoint(xPosOfMouse).x)
         {
-            if(transform.position.y < (Camera.main.ViewportToWorldPoint(Vector3.up).y - 2f))
-            {
-                transform.position += Vector3.up * _playerShipSpeedVertical * Time.deltaTime;
-            }
-        }
-
-        if (Input.GetKey(KeyCode.DownArrow))
-        {
-            if (transform.position.y > (Camera.main.ViewportToWorldPoint(Vector3.zero).y + 0.5f))
-            {
-                transform.position += Vector3.down * _playerShipSpeedVertical * Time.deltaTime;
-            }
+            transform.localScale = Vector3.one;
+            _goingToLeft = true;
         }
     }
 }

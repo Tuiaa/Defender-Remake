@@ -2,13 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ *      SHOOT MISSILES
+ *      - Shoot with space or left mouse click
+ *      -  Gets the direction player is facing
+ */
 public class ShootMissiles : MonoBehaviour
 {
     [SerializeField]
     private GameObject _bullet;
     [SerializeField]
     private float _bulletSpeed = 5;
-    
+
     private PlayerMovement _playerMovement;
 
     private void Awake()
@@ -18,7 +23,7 @@ public class ShootMissiles : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
         {
             Shoot();
         }
@@ -29,7 +34,7 @@ public class ShootMissiles : MonoBehaviour
         GameObject bullet = Instantiate(_bullet);
         bullet.transform.position = gameObject.transform.position;
 
-        if(_playerMovement._goingToLeft)
+        if (_playerMovement.PlayerGoingToLeft())
         {
             bullet.GetComponent<Rigidbody2D>().velocity = Vector3.left * _bulletSpeed;
         }

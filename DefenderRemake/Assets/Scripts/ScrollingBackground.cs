@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ *      SCROLLING BACKGROUND
+ *      - Background is scrolling at the same speed as player moves
+ *      - Background is warped back to start at the end of the picture
+ */
 public class ScrollingBackground : MonoBehaviour
 {
     [SerializeField]
@@ -21,18 +26,8 @@ public class ScrollingBackground : MonoBehaviour
 
     private void Update()
     {
-        bool playerGoingToLeft = _playerMovement._goingToLeft;
-
+        bool playerGoingToLeft = _playerMovement.PlayerGoingToLeft();
         MoveBackground((playerGoingToLeft) ? GameManager.DIRECTION.LEFT :  GameManager.DIRECTION.RIGHT);
-
-       /* if (playerGoingToLeft)
-        {
-            MoveBackground(GameManager.DIRECTION.LEFT);
-        }
-        else
-        {
-            MoveBackground(GameManager.DIRECTION.RIGHT);
-        }*/
     }
 
     public float GetBackgroundOffset()
@@ -46,9 +41,9 @@ public class ScrollingBackground : MonoBehaviour
         {
             case GameManager.DIRECTION.LEFT:
                 gameObject.transform.position += Vector3.right * _playerSpeed * Time.deltaTime;
+
                 if (gameObject.transform.position.x > _backgroundOffset)
                 {
-                    //Vector3 Xpos = Camera.main.ViewportToScreenPoint(_player.transform.position);
                     gameObject.transform.position = new Vector3(-46f, 0, 0);
                 }
                 break;

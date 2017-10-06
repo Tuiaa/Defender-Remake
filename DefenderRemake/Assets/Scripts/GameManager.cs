@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     private GameObject _enemyPrefab;
     [SerializeField]
     private Text _scoreText;
-
+    
     private float _backgroundLength;
     private float _timeToSpawnMoreEnemies;
     private int _enemyStartAmount = 10;
@@ -53,6 +53,11 @@ public class GameManager : MonoBehaviour
     {
         _playerScore += score;
         _scoreText.text = "Score: " + _playerScore.ToString();
+    }
+
+    public void PlayerDied()
+    {
+        _playerLivesLeft -= 1;
     }
 
     private Vector3 FindSpawnLocation()
