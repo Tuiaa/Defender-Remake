@@ -33,6 +33,11 @@ public class ScrollingBackground : MonoBehaviour
         }
     }
 
+    public float GetBackgroundOffset()
+    {
+        return _backgroundOffset;
+    }
+
     private void MoveBackground(GameManager.DIRECTION direction)
     {
         switch (direction)

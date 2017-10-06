@@ -21,7 +21,7 @@ public class EnemyController : MonoBehaviour
     {
         float enemySpeed = _speed * Time.deltaTime;
 
-        if (_moveCloser)
+       /* if (_moveCloser)
         {
             transform.position = Vector3.MoveTowards(transform.position, _player.transform.position, enemySpeed);
         }
@@ -39,7 +39,7 @@ public class EnemyController : MonoBehaviour
                         
                 }
             }
-        }
+        }*/
     }
 
     void OnTriggerEnter2D(Collider2D col)
