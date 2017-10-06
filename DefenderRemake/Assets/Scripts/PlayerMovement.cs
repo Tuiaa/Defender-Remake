@@ -15,17 +15,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if(_goingToLeft)
-        {
-            _background.transform.position += Vector3.right * _playerShipSpeedHorizontal * Time.deltaTime;
-        }
-
-        if (!_goingToLeft)
-        {
-            _background.transform.position += Vector3.left * _playerShipSpeedHorizontal * Time.deltaTime;
-        }
-
         CheckInputs();
+    }
+
+    public float GetPlayerHorizontalSpeed()
+    {
+        return _playerShipSpeedHorizontal;
     }
 
     private void CheckInputs()

@@ -44,7 +44,7 @@ public class EnemyController : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        Debug.Log("player triggered");
+       // Debug.Log("player triggered");
         if (col.gameObject.tag == PLAYER)
         {
             _moveCloser = false;
