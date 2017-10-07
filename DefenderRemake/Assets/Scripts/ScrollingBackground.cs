@@ -13,7 +13,7 @@ public class ScrollingBackground : MonoBehaviour
     private GameObject _player;
     private PlayerMovement _playerMovement;
     private float _playerSpeed;
-    private float _backgroundOffset = 54.4f;
+    private float _backgroundOffset = 50f;
 
     private void Start()
     {
@@ -26,8 +26,8 @@ public class ScrollingBackground : MonoBehaviour
 
     private void Update()
     {
-        bool playerGoingToLeft = _playerMovement.PlayerGoingToLeft();
-        MoveBackground((playerGoingToLeft) ? GameManager.DIRECTION.LEFT :  GameManager.DIRECTION.RIGHT);
+        // bool playerGoingToLeft = _playerMovement.PlayerGoingToLeft();
+        MoveBackground(_playerMovement.PlayerGoingToLeft() ? GameManager.DIRECTION.LEFT : GameManager.DIRECTION.RIGHT);
     }
 
     public float GetBackgroundOffset()
@@ -44,7 +44,7 @@ public class ScrollingBackground : MonoBehaviour
 
                 if (gameObject.transform.position.x > _backgroundOffset)
                 {
-                    gameObject.transform.position = new Vector3(-46f, 0, 0);
+                    gameObject.transform.position = new Vector2(-_backgroundOffset, 0);
                 }
                 break;
 
@@ -52,7 +52,7 @@ public class ScrollingBackground : MonoBehaviour
                 gameObject.transform.position += Vector3.left * _playerSpeed * Time.deltaTime;
                 if (gameObject.transform.position.x < -_backgroundOffset)
                 {
-                    gameObject.transform.position = new Vector3(54.4f, 0, 0);
+                    gameObject.transform.position = new Vector2(_backgroundOffset, 0);
                 }
                 break;
         }

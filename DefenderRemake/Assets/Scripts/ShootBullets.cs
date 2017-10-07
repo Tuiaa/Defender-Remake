@@ -32,7 +32,8 @@ public class ShootBullets : MonoBehaviour
     private void Shoot()
     {
         GameObject bullet = Instantiate(_bullet);
-        bullet.transform.position = gameObject.transform.position;
+        Vector3 bulletPos = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, -0.1f);
+        bullet.transform.position = bulletPos;
 
         if (_playerMovement.PlayerGoingToLeft())
         {

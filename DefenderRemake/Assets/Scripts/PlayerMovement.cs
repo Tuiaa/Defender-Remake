@@ -14,7 +14,11 @@ public class PlayerMovement : MonoBehaviour
     private float _playerShipSpeedHorizontal = 25;
     [SerializeField]
     private GameObject _background;
+
     private bool _goingToLeft = true;
+
+    private float _playerOffSetLowerScreen = 0.5f;
+    private float _playerOffSetUpperScreen = 2f;
 
     private void Update()
     {
@@ -37,15 +41,16 @@ public class PlayerMovement : MonoBehaviour
         float mouseRatioX = Input.mousePosition.x / Screen.width;
         float mouseRatioY = Input.mousePosition.y / Screen.height;
 
-        Vector3 mousePos = new Vector3(mouseRatioX, mouseRatioY, 0f);
+        Vector2 mousePos = new Vector2(mouseRatioX, mouseRatioY);
         mousePos = Camera.main.ViewportToWorldPoint(mousePos);
 
         // Move player up/down if mouse position is inside camera view
-        if (mousePos.y > (Camera.main.ViewportToWorldPoint(Vector3.zero).y + 0.5f) && mousePos.y < (Camera.main.ViewportToWorldPoint(Vector3.up).y - 2f))
+        if (mousePos.y > (Camera.main.ViewportToWorldPoint(Vector3.zero).y + _playerOffSetLowerScreen)
+            && mousePos.y < (Camera.main.ViewportToWorldPoint(Vector3.up).y - _playerOffSetUpperScreen))
         {
-            transform.position = new Vector3(0, mousePos.y, -0.1f);
+            transform.position = new Vector2(0, mousePos.y);
         }
-        Vector3 xPosOfMouse = new Vector3(0.5f, 0, 0);
+        Vector2 xPosOfMouse = new Vector2(0.5f, 0);
 
         // Player should go to right
         if (mousePos.x > Camera.main.ViewportToWorldPoint(xPosOfMouse).x)

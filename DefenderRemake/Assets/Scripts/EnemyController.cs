@@ -20,6 +20,7 @@ public class EnemyController : MonoBehaviour
     private PlayerMovement _playerMovement;
 
     private Renderer _enemyRenderer;
+    private float _backgroundOffset;
 
     private float _shootTimer;
     private float _shootFrequency = 3f;
@@ -35,7 +36,7 @@ public class EnemyController : MonoBehaviour
         _player = GameObject.FindGameObjectWithTag(GameStrings.PLAYER);
         _playerMovement = _player.GetComponent<PlayerMovement>();
         _enemyRenderer = gameObject.GetComponent<Renderer>();
-        
+        _backgroundOffset = transform.parent.GetComponent<ScrollingBackground>().GetBackgroundOffset();
         // Randomize enemy movement & shooting
         _shootFrequency = Random.Range(3f, 8f);
         _sinCurveFrequency = Random.Range(3f, 6f);
@@ -56,18 +57,19 @@ public class EnemyController : MonoBehaviour
             {
                 _previousDirection = Vector3.left;
 
-                if (gameObject.transform.localPosition.x < -54f)
+                // Correct offset should be calculated, now chacked from scene
+                if (gameObject.transform.localPosition.x < -_backgroundOffset - 7f)
                 {
-                    gameObject.transform.localPosition = new Vector3(60f, transform.position.y, 0);
+                    gameObject.transform.localPosition = new Vector2(_backgroundOffset + 7f, transform.position.y);
                 }
             }
             else
             {
                 _previousDirection = Vector3.right;
 
-                if (gameObject.transform.localPosition.x > 54f)
+                if (gameObject.transform.localPosition.x > _backgroundOffset + 7f)
                 {
-                    gameObject.transform.localPosition = new Vector3(-60f, transform.position.y, 0);
+                    gameObject.transform.localPosition = new Vector2(-_backgroundOffset - 7f, transform.position.y);
                 }
             }
             _shootTimer -= Time.deltaTime;
@@ -87,9 +89,7 @@ public class EnemyController : MonoBehaviour
             bullet.transform.parent = gameObject.transform;
             bullet.transform.position = gameObject.transform.position;
 
-            Vector3 shootDirection = _player.transform.position - bullet.transform.position;
-            shootDirection = shootDirection.normalized;
-            
+            Vector3 shootDirection = (_player.transform.position - bullet.transform.position).normalized;
             bullet.GetComponent<Rigidbody2D>().velocity = shootDirection * _bulletSpeed;
 
             _shootTimer = _shootFrequency;

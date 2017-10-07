@@ -7,7 +7,7 @@ using UnityEngine.UI;
 /*
  *      GAME MANAGER
  *      - Handles enemy spawning, game over, player score... etc
- *      - Player gets more difficult with time
+ *      - Game gets more difficult with time
  *          - Each wave spawns more enemies
  */
 public class GameManager : MonoBehaviour
@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     private GameObject _background;
-    private float _backgroundLength = 54.4f;
+    private float _backgroundLength = 50f;
     [SerializeField]
     private GameObject _enemyPrefab;
 
@@ -35,10 +35,10 @@ public class GameManager : MonoBehaviour
     private GameObject _gameOverPanel;
     [SerializeField]
     private Text _gameOverScoreText;
-    
+
     private int _enemyStartAmount = 10;
-    private int _difficulty = 0;
-    private float _difficultyTimer = 20f;
+    private int _difficulty = 1;
+    private float _difficultyTimer = 15f;
     private float _difficultyTimerDefault = 20f;
 
     [SerializeField]
@@ -74,7 +74,7 @@ public class GameManager : MonoBehaviour
         _difficultyTimer -= Time.deltaTime;
         if (_difficultyTimer <= 0)
         {
-            _difficulty += 2;
+            _difficulty += _difficulty;
             SpawnEnemy(_difficulty);
             _difficultyTimer = _difficultyTimerDefault;
         }
@@ -118,22 +118,17 @@ public class GameManager : MonoBehaviour
 
     private Vector3 FindSpawnLocation()
     {
+        // Random Y pos is taken directly from background, should be calculated
+        float randomY = UnityEngine.Random.Range(-3.5f, 2.5f);
         float randomX = UnityEngine.Random.Range(-_backgroundLength, _backgroundLength);
-        float randomY = UnityEngine.Random.Range(-4f, 2.5f);
 
-        Vector3 enemyPos = new Vector3(randomX, randomY, -0.1f);
-        enemyPos.z = -0.1f;
+        Vector2 enemyPos = new Vector2(randomX, randomY);
         return enemyPos;
-    }
-
-    private void SaveScore()
-    {
-
     }
 
     private void GameOver()
     {
-        if(GameIsPaused!=null)
+        if (GameIsPaused != null)
         {
             GameIsPaused();
         }
