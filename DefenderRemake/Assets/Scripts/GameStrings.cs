@@ -16,4 +16,5 @@ public class GameStrings : MonoBehaviour
 
     public const string SCORE_TEXT = "Score: ";
     public const string PLAYER_LIVES = "Lives: ";
+    public const string DEFAULT_PLAYER_NAME = "Jaska";
 }

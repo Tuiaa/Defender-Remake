@@ -4,8 +4,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /*
- *      UI BUTTONS
- *      - All UI buttons
+ *      MAIN MENU UI BUTTONS
+ *      - UI buttons from main menu
  */
 public class UIButtonScript : MonoBehaviour
 {

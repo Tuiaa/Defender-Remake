@@ -24,49 +24,57 @@ public class EnemyController : MonoBehaviour
     private float _shootTimer;
     private float _shootFrequency = 3f;
 
-    private float magnitude = 0.05f;
-    private float frequency = 5f;
+    private float _sinCurveMagnitude = 0.05f;
+    private float _sinCurveFrequency = 5f;
 
     private Vector3 _previousDirection = Vector3.left;
+    private bool _gamePaused = false;
 
     private void Start()
     {
         _player = GameObject.FindGameObjectWithTag(GameStrings.PLAYER);
         _playerMovement = _player.GetComponent<PlayerMovement>();
         _enemyRenderer = gameObject.GetComponent<Renderer>();
-
+        
+        // Randomize enemy movement & shooting
         _shootFrequency = Random.Range(3f, 8f);
+        _sinCurveFrequency = Random.Range(3f, 6f);
+
         _shootTimer = _shootFrequency;
+        GameManager.GameIsPaused += OnGameIsPaused;
     }
 
     private void Update()
     {
-        transform.localPosition += _previousDirection * Time.deltaTime * _speed;
-        transform.localPosition = transform.localPosition + Vector3.up * Mathf.Sin(Time.time * frequency) * magnitude;
-
-        // Change direction towards player
-        if (!_playerMovement.PlayerGoingToLeft())
+        if (!_gamePaused)
         {
-            _previousDirection = Vector3.left;
+            transform.localPosition += _previousDirection * Time.deltaTime * _speed;
+            transform.localPosition += Vector3.up * Mathf.Sin(Time.time * _sinCurveFrequency) * _sinCurveMagnitude;
 
-            if (gameObject.transform.localPosition.x < -54f)
+            // Change direction so enemies go towards player
+            if (!_playerMovement.PlayerGoingToLeft())
             {
-                gameObject.transform.localPosition = new Vector3(60f, transform.position.y, 0);
-            }
-        }
-        else
-        {
-            _previousDirection = Vector3.right;
+                _previousDirection = Vector3.left;
 
-            if (gameObject.transform.localPosition.x > 54f)
-            {
-                gameObject.transform.localPosition = new Vector3(-60f, transform.position.y, 0);
+                if (gameObject.transform.localPosition.x < -54f)
+                {
+                    gameObject.transform.localPosition = new Vector3(60f, transform.position.y, 0);
+                }
             }
-        }
-        _shootTimer -= Time.deltaTime;
-        if (_shootTimer <= 0)
-        {
-            Shoot();
+            else
+            {
+                _previousDirection = Vector3.right;
+
+                if (gameObject.transform.localPosition.x > 54f)
+                {
+                    gameObject.transform.localPosition = new Vector3(-60f, transform.position.y, 0);
+                }
+            }
+            _shootTimer -= Time.deltaTime;
+            if (_shootTimer <= 0)
+            {
+                Shoot();
+            }
         }
     }
 
@@ -74,14 +82,22 @@ public class EnemyController : MonoBehaviour
     {
         if (_enemyRenderer.isVisible)
         {
-            Vector3 shootDirection = _player.transform.position - transform.position;
-            shootDirection = shootDirection.normalized;
 
             GameObject bullet = Instantiate(Resources.Load(GameStrings.ENEMY_BULLET, typeof(GameObject))) as GameObject;
-            bullet.transform.position = transform.position;
+            bullet.transform.parent = gameObject.transform;
+            bullet.transform.position = gameObject.transform.position;
+
+            Vector3 shootDirection = _player.transform.position - bullet.transform.position;
+            shootDirection = shootDirection.normalized;
+            
             bullet.GetComponent<Rigidbody2D>().velocity = shootDirection * _bulletSpeed;
 
             _shootTimer = _shootFrequency;
         }
+    }
+
+    private void OnGameIsPaused()
+    {
+        _gamePaused = true;
     }
 }

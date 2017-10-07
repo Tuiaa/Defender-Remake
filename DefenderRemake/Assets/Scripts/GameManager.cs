@@ -17,6 +17,9 @@ public class GameManager : MonoBehaviour
     public delegate void PlayerDeathEvent();
     public static PlayerDeathEvent PlayerHasDied;
 
+    public delegate void GamePausedEvent();
+    public static GamePausedEvent GameIsPaused;
+
     [SerializeField]
     private GameObject _background;
     private float _backgroundLength = 54.4f;
@@ -38,14 +41,13 @@ public class GameManager : MonoBehaviour
     private float _difficultyTimer = 20f;
     private float _difficultyTimerDefault = 20f;
 
+    [SerializeField]
     private int _playerScore = 0;
     private int _playerLivesLeft = 3;
 
-    float _screenHeight;
-    float _screenWidth;
-
     private void Awake()
     {
+        Time.timeScale = 1f;
         if (_background != null)
         {
             _backgroundLength = _background.GetComponent<ScrollingBackground>().GetBackgroundOffset();
@@ -55,9 +57,6 @@ public class GameManager : MonoBehaviour
         {
             _gameOverPanel.SetActive(false);
         }
-
-        _screenHeight = Camera.main.orthographicSize * 2;
-        _screenWidth = _screenHeight * Screen.width / Screen.height;
     }
 
     private void Start()
@@ -112,7 +111,7 @@ public class GameManager : MonoBehaviour
             {
                 GameObject enemy = Instantiate(_enemyPrefab);
                 enemy.transform.parent = _background.transform;
-                enemy.transform.position = FindSpawnLocation();
+                enemy.transform.localPosition = FindSpawnLocation();
             }
         }
     }
@@ -120,16 +119,25 @@ public class GameManager : MonoBehaviour
     private Vector3 FindSpawnLocation()
     {
         float randomX = UnityEngine.Random.Range(-_backgroundLength, _backgroundLength);
-        float randomY = UnityEngine.Random.Range(-4.5f, 3.5f);
+        float randomY = UnityEngine.Random.Range(-4f, 2.5f);
 
         Vector3 enemyPos = new Vector3(randomX, randomY, -0.1f);
         enemyPos.z = -0.1f;
         return enemyPos;
     }
 
+    private void SaveScore()
+    {
+
+    }
+
     private void GameOver()
     {
-        Time.timeScale = 0;
+        if(GameIsPaused!=null)
+        {
+            GameIsPaused();
+        }
+        Time.timeScale = 0f;
 
         if (_gameOverScoreText != null)
         {
